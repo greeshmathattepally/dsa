@@ -1,0 +1,43 @@
+class Node {
+    Node[] links = new Node[26];
+    
+    boolean containsKey(char ch) {
+        return links[ch - 'a'] != null;
+    }
+    
+    void put(char ch, Node node) {
+        links[ch - 'a'] = node;
+    }
+    
+    Node get(char ch) {
+        return links[ch - 'a'];
+    }
+}
+
+class Solution {
+    public int countDistinctSubstring(String s) {
+        Node root = new Node();
+        int count = 0;
+        
+        // i represents the starting point of the suffix
+        for (int i = 0; i < s.length(); i++) {
+            Node node = root; // Start at root for each new starting character
+            
+            // j builds the prefix of the current suffix one character at a time
+            for (int j = i; j < s.length(); j++) {
+                char ch = s.charAt(j);
+                
+                // If this path doesn't exist, it's a brand new substring!
+                if (!node.containsKey(ch)) {
+                    node.put(ch, new Node());
+                    count++;
+                }
+                // Move down the Trie to the next character's node
+                node = node.get(ch);
+            }
+        }
+        
+        // Return count + 1 to include the empty substring ""
+        return count + 1;
+    }
+}
